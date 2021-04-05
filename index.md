@@ -1,37 +1,92 @@
-## Welcome to GitHub Pages
+# Suridata: Documentação para integração com a API
 
-You can use the [editor on GitHub](https://github.com/Suridata-Tecnologia/suri-porta-api/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+O Suridata provê uma API para integração dos relatórios de empresas de sua seguradora e cliente.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+## URL para requisição:
+```
+https://portal.suridata.com.br/api/auth/
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+## Requisição
 
-### Jekyll Themes
+### Exemplos de requisição:
+`CURL`
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Suridata-Tecnologia/suri-porta-api/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+      curl --request POST \
+      --url https://portal.suridata.com.br/api/auth/ \
+      --header 'Content-Type: application/json' \
+      --data '{
+      "cliente": "Nome do cliente",
+      "seguradora": "Nome da seguradora",
+      "token": "Token passado pela Suridata"
+     }'
+     
+`Laravel`
 
-### Support or Contact
+      <?php
+      namespace App\Classes;
+      
+      use Exception;
+      
+      class Suridata
+      {
+        // url do API
+        private $url = 'https://portal.suridata.com.br/api/auth/';
+        // variaveis
+        private $client, $provider;
+    
+        public function __construct($client, $provider)
+        {
+            $this->client = $client;
+            $this->provider = $provider;      
+        }
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+        public function getFrame(){        
+            // dados da requisição
+            $data = array(
+                'token' => $this->token,
+                'cliente' => $this->client,
+                'seguradora' => $this->provider
+            );        
+
+            // inicia e configura sessão
+            $curl_handle = curl_init();
+            curl_setopt($curl_handle, CURLOPT_URL, $this->url);
+            curl_setopt($curl_handle, CURLOPT_POST, 1);
+            curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $data);
+            curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, true);
+            // executa comando
+            $result = curl_exec($curl_handle);
+
+            // retorna erro se houve algum erro
+            if ($result === false) {
+                return ("Erro " . curl_error($curl_handle));
+            }
+
+            return $result;
+        }
+    }
+     
+     
+### Corpo da requisição:  
+`POST /`
+
+    {
+      "cliente": "Nome do cliente",
+      "seguradora": "Nome da seguradora",
+      "token": "Token passado pela Suridata"
+    }
+
+### Exemplo de resposta
+
+A resposta vai retornar apenas a string com a url para embedar no portal terceiro
+
+| Campo       | Tipo            | Descrição        |
+| ----------- | --------------- | -----------------|
+| URL         | String          | URL para embedar | 
+
+
+### Suporte ou contato
+
+[![Badge](https://img.shields.io/static/v1?label=Site&message=Acesse%20o%20site&color=lightgrey)](https://www.suridata.com.br/)
+[![Gmail Badge](https://img.shields.io/badge/-desenvolvimento@suridata.com.br-c14438?style=flat-square&logo=Gmail&logoColor=white&link=mailto:desenvolvimento@suridata.com.br)](desenvolvimento@suridata.com.br)
