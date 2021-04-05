@@ -35,10 +35,11 @@ https://portal.suridata.com.br/api/auth/
         // variaveis
         private $client, $provider;
     
-        public function __construct($client, $provider)
+        public function __construct($client, $provider, $token)
         {
             $this->client = $client;
             $this->provider = $provider;      
+            $this->token = $token;  
         }
 
         public function getFrame(){        
