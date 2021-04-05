@@ -1,6 +1,6 @@
 # Suridata: Documentação para integração com a API
 
-O Suridata provê uma API para integração dos relatórios de empresas de sua seguradora e cliente.
+A Suridata provê uma API para integração dos relatórios de empresas de sua seguradora e cliente.
 
 ## URL para requisição:
 ```
